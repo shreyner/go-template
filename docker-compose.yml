@@ -31,12 +31,16 @@ services:
     environment:
       PGADMIN_DEFAULT_PASSWORD: 'postgres'
       PGADMIN_DEFAULT_EMAIL: 'al.shreyner@gmail.com'
+    depends_on:
+      - pg
 
-# Service migration
+# Service migrations
+#  https://writeitdifferently.com/postgresql/flyway/2020/03/15/running-postgresql-and-flyway-with-docker-compose.html
   flyway:
-    image: boxfuse/flyway:5.2.4
-    command: -url=jdbc:postgresql://pg/develop?sslmode=disable -user=postgres -password=postgres migrate
+    image: flyway/flyway:9.1.3
+    command: migrate
     volumes:
-      - ./db/migration:/flyway/sql
+      - ./db/migrations:/flyway/sql
+      - ./flyway.conf:/flyway/conf/flyway.conf
     depends_on:
       - pg
