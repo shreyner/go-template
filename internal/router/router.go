@@ -1,9 +1,10 @@
 package router
 
 import (
+	"go-template/internal/handlers"
+
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
-	"go-template/internal/handlers"
 	"go.uber.org/zap"
 )
 
@@ -20,6 +21,9 @@ func New(log *zap.Logger) *chi.Mux {
 
 	r.Get("/", Index)
 	r.Get("/me", userH.GetMe)
+
+	// // TODO: https://github.com/swaggo/http-swagger
+	// r.Get("/swagger/*", httpSwagger.Handler())
 
 	return r
 }
