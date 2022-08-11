@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+##  Main application
+#  go-restapi:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - 8080:8080
+#    environment:
+#      - PORT=8080
+#      - DATABASE_URL=postgres://postgres:postgres@pg/develop?sslmode=disable
+#    depends_on:
+#      - pg
+#      - flyway
+
+  pg:
+    image: postgres:14.4
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'develop'
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4:6.12
+    ports:
+      - 3081:80
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: 'postgres'
+      PGADMIN_DEFAULT_EMAIL: 'al.shreyner@gmail.com'
+
+# Service migration
+  flyway:
+    image: boxfuse/flyway:5.2.4
+    command: -url=jdbc:postgresql://pg/develop?sslmode=disable -user=postgres -password=postgres migrate
+    volumes:
+      - ./db/migration:/flyway/sql
+    depends_on:
+      - pg
