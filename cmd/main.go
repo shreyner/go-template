@@ -53,7 +53,7 @@ func main() {
 
 	apiMux := router.New(log)
 
-	apiServer := server.New(log, apiMux, cfg.Port)
+	apiServer := server.NewHttpServer(log, apiMux, cfg.Port)
 	log.Info("Staring rest api server...")
 	go apiServer.Start()
 
