@@ -2,6 +2,7 @@ package router
 
 import (
 	"go-template/internal/handlers"
+	"go-template/internal/middlewares"
 
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
@@ -16,7 +17,7 @@ func New(log *zap.Logger) *chi.Mux {
 
 	r.Use(chiMiddleware.RequestID)
 	r.Use(chiMiddleware.RealIP)
-	r.Use(chiMiddleware.Logger)
+	r.Use(middlewares.NewStructuredLogger(log))
 	r.Use(chiMiddleware.Recoverer)
 
 	r.Get("/", Index)

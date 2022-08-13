@@ -2,16 +2,22 @@ package logger
 
 import (
 	"fmt"
+
+	"go-template/internal/config"
+
 	"go.uber.org/zap"
 )
 
-func InitLogger() (*zap.Logger, error) {
+func InitLogger(cfg *config.Config) (*zap.Logger, error) {
+	cfgLog := zap.NewProductionConfig()
 
-	cfg := zap.NewDevelopmentConfig()
+	if cfg.IsDev {
+		cfgLog = zap.NewDevelopmentConfig()
+	}
 
-	cfg.DisableStacktrace = true
+	cfgLog.DisableStacktrace = true
 
-	logger, err := cfg.Build()
+	logger, err := cfgLog.Build()
 
 	if err != nil {
 		return nil, fmt.Errorf("logger build: %w", err)

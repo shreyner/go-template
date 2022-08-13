@@ -18,21 +18,20 @@ import (
 )
 
 func main() {
-	log, err := logger.InitLogger()
+	cfg := &config.Config{}
+
+	if err := cfg.Parse(); err != nil {
+		fmt.Errorf("Can't parse env: %w", err)
+		os.Exit(1)
+	}
+
+	log, err := logger.InitLogger(cfg)
 	if err != nil {
 		fmt.Errorf("error initilizing logger: %w", err)
 		os.Exit(1)
 	}
 
 	defer log.Sync()
-
-	log.Info("Parsing env")
-	cfg := config.Config{}
-
-	if err := cfg.Parse(); err != nil {
-		log.Fatal("Can't parse env", zap.Error(err))
-		os.Exit(1)
-	}
 
 	log.Info("Connection to database...")
 	db, err := database.New(cfg.DBUrl)
