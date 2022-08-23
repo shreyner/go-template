@@ -54,7 +54,7 @@ func main() {
 
 	apiServer := server.NewHttpServer(log, apiMux, cfg.Port)
 	log.Info("Staring rest api server...")
-	go apiServer.Start()
+	apiServer.Start()
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
