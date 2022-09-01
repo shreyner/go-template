@@ -1,12 +1,13 @@
-package server
+package httpserver
 
 import (
 	"context"
-	"go.uber.org/zap"
 	"net"
 	"net/http"
 	"strconv"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 type HTTPServer struct {
