@@ -1,9 +1,9 @@
-FROM golang:1.19 as module
+FROM golang:1.19.2 as module
 
 ADD go.mod go.sum /m/
 RUN cd /m && go mod download
 
-FROM golang:1.19 as builder
+FROM golang:1.19.2 as builder
 
 COPY --from=module /go/pkg /go/pkg
 
@@ -14,7 +14,7 @@ ADD . /application
 WORKDIR /application
 
 RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
-    go build -o ./bin/application ./cmd/main.go
+    go build -o ./bin/application ./cmd/app/main.go
 
 FROM scratch
 
