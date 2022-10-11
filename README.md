@@ -27,4 +27,23 @@ Up
 ```shell
 $ docker run --rm --net=go-tempalte_default -v $(pwd)/db/migrations:/flyway/sql -v $(pwd)/flyway.conf:/flyway/conf/flyway.conf flyway/flyway migrate  
 ```
+# Migrate
+
+https://github.com/jackc/tern
+
+up
+```shell
+tern migrate -m migrate
+```
+
+down
+```shell
+tern migrate --destination -1 -m migrate
+```
+
+create
+```shell
+tern new user-and-add -m migrate
+```
+
 

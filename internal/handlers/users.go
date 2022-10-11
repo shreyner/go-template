@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type UsersHandler struct {
@@ -10,10 +11,8 @@ type UsersHandler struct {
 }
 
 func NewUsersHandlers(logger *zap.Logger) *UsersHandler {
-	log := logger.Named("UsersHandlers")
-
 	return &UsersHandler{
-		log,
+		log: logger.Named("UsersHandlers"),
 	}
 }
 

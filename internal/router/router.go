@@ -11,6 +11,8 @@ import (
 
 func New(log *zap.Logger) *chi.Mux {
 	log.Info("Initilize REST API")
+
+	indexH := handlers.NewIndexHandlers(log)
 	userH := handlers.NewUsersHandlers(log)
 
 	r := chi.NewRouter()
@@ -20,7 +22,7 @@ func New(log *zap.Logger) *chi.Mux {
 	r.Use(middlewares.NewStructuredLogger(log))
 	r.Use(chiMiddleware.Recoverer)
 
-	r.Get("/", Index)
+	r.Get("/", indexH.Index)
 	r.Get("/me", userH.GetMe)
 
 	// // TODO: https://github.com/swaggo/http-swagger
