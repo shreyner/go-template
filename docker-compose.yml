@@ -33,14 +33,3 @@ services:
       PGADMIN_DEFAULT_EMAIL: 'al.shreyner@gmail.com'
     depends_on:
       - pg
-
-# Service migrations
-#  https://writeitdifferently.com/postgresql/flyway/2020/03/15/running-postgresql-and-flyway-with-docker-compose.html
-  flyway:
-    image: flyway/flyway:9.1.3
-    command: migrate
-    volumes:
-      - ./db/migrations:/flyway/sql
-      - ./flyway.conf:/flyway/conf/flyway.conf
-    depends_on:
-      - pg

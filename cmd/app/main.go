@@ -18,7 +18,7 @@ func main() {
 
 	log, err := logger.InitLogger(cfg)
 	if err != nil {
-		fmt.Errorf("error initilizing logger: %w", err)
+		_ = fmt.Errorf("error initilizing logger: %w", err)
 		os.Exit(1)
 	}
 
