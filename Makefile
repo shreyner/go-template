@@ -5,6 +5,7 @@ PATH := $(PROJECT_BIN):$(PATH)
 
 GOLANGCI_LINT = $(PROJECT_BIN)/golangci-lint
 TERN = $(PROJECT_BIN)/tern
+SWAG = $(PROJECT_BIN)/swag
 
 .PHONY: .install-linter
 .install-linter:
@@ -24,3 +25,10 @@ lint: .install-linter
 migrate: .install-migrate
 	$(TERN) migrate -m migrate
 
+.PHONY: .install-swag
+.install-swag:
+	### Install swag tool
+	[ -f $(SWAG) ] || GOBIN=$(PROJECT_BIN) go install github.com/swaggo/swag/cmd/swag@latest
+
+.PHONY: install-tools
+install-tools: .install-linter .install-migrate .install-swag

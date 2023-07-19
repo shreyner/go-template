@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"go-template/internal/app"
 	"go-template/internal/config"
 	"go-template/internal/pkg/logger"
-	"os"
 )
 
 func main() {

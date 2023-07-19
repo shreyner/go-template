@@ -1,11 +1,11 @@
 package config
 
 import (
-	"github.com/caarlos0/env/v6"
+	"github.com/caarlos0/env/v9"
 )
 
 type Config struct {
-	Env   string `env:"ENV" envDefault:"dev"`
+	Env   string `env:"ENV" envDefault:"prod"`
 	Port  int    `env:"PORT" envDefault:"8080"`
 	DBUrl string `env:"DATABASE_URL,required"`
 
