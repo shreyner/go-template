@@ -18,7 +18,6 @@ func NewUsersHandlers(logger *zap.Logger) *UsersHandler {
 
 func (h *UsersHandler) GetMe(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
-
 	_, err := w.Write([]byte("Hello world"))
 
 	if err != nil {
