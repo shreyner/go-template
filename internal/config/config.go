@@ -1,25 +1,43 @@
 package config
 
 import (
-	"github.com/caarlos0/env/v9"
+	"go-template/internal/pkg/database"
+	"log"
+	"os"
+
+	"github.com/ilyakaznacheev/cleanenv"
+
+	"go-template/internal/pkg/httpserver"
+)
+
+const (
+	Local = "local"
+	Prod  = "prod"
+	Test  = "test"
 )
 
 type Config struct {
-	Env   string `env:"ENV" envDefault:"prod"`
-	Port  int    `env:"PORT" envDefault:"8080"`
-	DBUrl string `env:"DATABASE_URL,required"`
-
-	IsProd bool
-	IsDev  bool
+	Env      string                  `yaml:"env" env:"ENV" env-default:"prod"`
+	Http     httpserver.HttpConfig   `yaml:"http_server"`
+	DataBase database.DataBaseConfig `yaml:"database"`
 }
 
 func (c *Config) Parse() error {
-	if err := env.Parse(c); err != nil {
+	configPath := os.Getenv("CONFIG_PATH")
+
+	if configPath == "" {
+		configPath = "./config/local.yml"
+	}
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		log.Printf("config file does not exist: %s\n", configPath)
+
 		return err
 	}
 
-	c.IsDev = c.Env == "dev"
-	c.IsProd = c.Env != "dev"
+	if err := cleanenv.ReadConfig(configPath, c); err != nil {
+		return err
+	}
 
 	return nil
 }

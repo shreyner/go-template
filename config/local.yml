@@ -1,0 +1,5 @@
+env: local
+database:
+  uri: postgres://postgres:postgres@localhost:5432/develop?sslmode=disable
+http_server:
+  port: 3080

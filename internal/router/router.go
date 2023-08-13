@@ -1,29 +1,27 @@
 package router
 
 import (
-	"go-template/internal/handlers"
-	"go-template/internal/middlewares"
+	"log/slog"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
-	"go.uber.org/zap"
+
+	"go-template/internal/pkg/logger"
 )
 
-func New(log *zap.Logger) *chi.Mux {
-	log.Info("Initilize REST API")
-
-	indexH := handlers.NewIndexHandlers(log)
-	userH := handlers.NewUsersHandlers(log)
+func New(log *slog.Logger) *chi.Mux {
+	log.Info("Init REST API")
 
 	r := chi.NewRouter()
 
 	r.Use(chiMiddleware.RequestID)
 	r.Use(chiMiddleware.RealIP)
-	r.Use(middlewares.NewStructuredLogger(log))
+	r.Use(logger.NewStructuredLogger(log))
 	r.Use(chiMiddleware.Recoverer)
+	r.Use(chiMiddleware.URLFormat)
 
-	r.Get("/", indexH.Index)
-	r.Get("/me", userH.GetMe)
+	r.Use(chiMiddleware.Timeout(60 * time.Second))
 
 	// // TODO: https://github.com/swaggo/http-swagger
 	// r.Get("/swagger/*", httpSwagger.Handler())

@@ -2,37 +2,41 @@ package httpserver
 
 import (
 	"context"
+	"go-template/internal/pkg/server"
+	"log/slog"
 	"net"
 	"net/http"
 	"strconv"
 	"time"
-
-	"go.uber.org/zap"
 )
+
+var _ server.Server = (*HTTPServer)(nil)
 
 type HTTPServer struct {
 	server http.Server
 	errors chan error
-	log    *zap.Logger
+	log    *slog.Logger
 }
 
-func NewHttpServer(log *zap.Logger, handler http.Handler, port int) *HTTPServer {
+func NewHttpServer(log *slog.Logger, handler http.Handler, config *HttpConfig) *HTTPServer {
 	return &HTTPServer{
 		log: log,
 		server: http.Server{
-			Addr:    net.JoinHostPort("", strconv.Itoa(port)),
+			Addr:    net.JoinHostPort("", strconv.Itoa(config.Port)),
 			Handler: handler,
 		},
 		errors: make(chan error),
 	}
 }
 
-func (hs *HTTPServer) Start() {
+func (hs *HTTPServer) Start(_ context.Context) error {
 	go func() {
-		hs.log.Info("Http Server listening on ", zap.String("addr", hs.server.Addr))
+		hs.log.Info("Http Server listening on ", slog.String("addr", hs.server.Addr))
 		hs.errors <- hs.server.ListenAndServe()
 		close(hs.errors)
 	}()
+
+	return nil
 }
 
 func (hs *HTTPServer) Stop(ctx context.Context) error {

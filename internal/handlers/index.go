@@ -1,22 +1,22 @@
 package handlers
 
 import (
+	"fmt"
+	"log/slog"
 	"net/http"
-
-	"go.uber.org/zap"
 )
 
 type IndexHandler struct {
-	log *zap.Logger
+	log *slog.Logger
 }
 
-func NewIndexHandlers(logger *zap.Logger) *IndexHandler {
+func NewIndexHandlers(logger *slog.Logger) *IndexHandler {
 	return &IndexHandler{
-		log: logger.Named("IndexHandlers"),
+		log: logger.With(slog.String("moduleName", "IndexHandlers")),
 	}
 }
 
 func (i *IndexHandler) Index(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte("index"))
+	fmt.Fprint(w, "Hello world")
 }

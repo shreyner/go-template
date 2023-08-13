@@ -10,20 +10,22 @@ import (
 )
 
 func main() {
-	cfg := &config.Config{}
+	var cfg config.Config
 
 	if err := cfg.Parse(); err != nil {
 		fmt.Errorf("Can't parse env: %w", err)
+
 		os.Exit(1)
 	}
 
-	log, err := logger.InitLogger(cfg)
+	log, err := logger.InitLogger(&cfg)
+
 	if err != nil {
 		_ = fmt.Errorf("error initilizing logger: %w", err)
+
 		os.Exit(1)
+		return
 	}
 
-	defer log.Sync()
-
-	app.Run(log, cfg)
+	app.Run(log, &cfg)
 }

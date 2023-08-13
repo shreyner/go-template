@@ -1,4 +1,4 @@
-package middlewares
+package logzap
 
 import (
 	"fmt"
@@ -9,13 +9,17 @@ import (
 	"go.uber.org/zap"
 )
 
+var _ middleware.LogFormatter = (*StructuredLogger)(nil)
+
 type StructuredLogger struct {
 	Logger *zap.Logger
 }
 
 func (s *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry { //nolint:ireturn
-	entry := &StructuredLoggerEntry{Logger: s.Logger.Named("Http Request")}
-	fields := make([]zap.Field, 0)
+	entry := &StructuredLoggerEntry{
+		Logger: s.Logger.Named("Http Request"),
+	}
+	fields := make([]zap.Field, 0, 6)
 
 	//fields = append(fields, zap.String("ts", time.Now().UTC().Format(time.RFC1123)))
 
@@ -40,6 +44,8 @@ func (s *StructuredLogger) NewLogEntry(r *http.Request) middleware.LogEntry { //
 
 	return entry
 }
+
+var _ middleware.LogEntry = (*StructuredLoggerEntry)(nil)
 
 type StructuredLoggerEntry struct {
 	Logger *zap.Logger

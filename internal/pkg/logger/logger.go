@@ -1,27 +1,30 @@
 package logger
 
 import (
-	"fmt"
+	"log/slog"
+	"os"
 
 	"go-template/internal/config"
-
-	"go.uber.org/zap"
 )
 
-func InitLogger(cfg *config.Config) (*zap.Logger, error) {
-	cfgLog := zap.NewProductionConfig()
-
-	if cfg.IsDev {
-		cfgLog = zap.NewDevelopmentConfig()
+func InitLogger(cfg *config.Config) (*slog.Logger, error) {
+	logOptions := &slog.HandlerOptions{
+		Level: slog.LevelInfo,
 	}
 
-	cfgLog.DisableStacktrace = true
+	var logHandler slog.Handler = slog.NewJSONHandler(os.Stdout, logOptions)
 
-	logger, err := cfgLog.Build()
-
-	if err != nil {
-		return nil, fmt.Errorf("logger build: %w", err)
+	if cfg.Env == config.Local {
+		logOptions.Level = slog.LevelDebug
+		logHandler = slog.NewTextHandler(os.Stdout, logOptions)
 	}
 
-	return logger, nil
+	if cfg.Env == config.Test {
+		logOptions.Level = slog.LevelError
+		logHandler = slog.NewTextHandler(os.Stdout, logOptions)
+	}
+
+	log := slog.New(logHandler)
+
+	return log, nil
 }

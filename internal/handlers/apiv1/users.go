@@ -1,18 +1,18 @@
-package handlers
+package apiv1
 
 import (
+	"go-template/internal/pkg/logger"
+	"log/slog"
 	"net/http"
-
-	"go.uber.org/zap"
 )
 
 type UsersHandler struct {
-	log *zap.Logger
+	log *slog.Logger
 }
 
-func NewUsersHandlers(logger *zap.Logger) *UsersHandler {
+func NewUsersHandlers(logger *slog.Logger) *UsersHandler {
 	return &UsersHandler{
-		log: logger.Named("UsersHandlers"),
+		log: logger.With(slog.String("moduleName", "UsersHandlers")),
 	}
 }
 
@@ -21,7 +21,7 @@ func (h *UsersHandler) GetMe(w http.ResponseWriter, _ *http.Request) {
 	_, err := w.Write([]byte("Hello world"))
 
 	if err != nil {
-		h.log.Error("Get error:", zap.Error(err))
+		h.log.Error("Get error:", logger.Err(err))
 
 		return
 	}
