@@ -1,9 +1,10 @@
 package apiv1
 
 import (
-	"github.com/go-chi/chi/v5"
 	"log/slog"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func New(log *slog.Logger) http.Handler {
